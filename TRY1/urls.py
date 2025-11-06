@@ -9,6 +9,7 @@ urlpatterns = [
     
     # CECI EST LA SEULE LIGNE NÉCESSAIRE pour inclure les chemins de l'app
     path('', include('Python_app.urls')), 
+    path('accounts/', include('django.contrib.auth.urls')),
     
     # 🚨 SUPPRIMEZ TOUT CE QUI SUIT 🚨
     # path('offline/', views.offline_category_selection, name='offline_category'), 

@@ -46,7 +46,7 @@ class Answer(models.Model):
     
     IsCorrect = models.BooleanField(default=False) 
     
-    # Optionnel: Contrainte pour s'assurer qu'il n'y a qu'une seule bonne réponse
+    # Contrainte pour s'assurer qu'il n'y a qu'une seule bonne réponse
     class Meta:
         constraints = [
            models.UniqueConstraint(fields=['Question', 'IsCorrect'], condition=models.Q(IsCorrect=True), name='unique_correct_answer')

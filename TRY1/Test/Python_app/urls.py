@@ -4,8 +4,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    
     # 1. Home path
-    path('home/', views.home_view, name='home'),
+    path('', views.home_view, name='home'),
     
     # 2. Mode Offline - Category Selection (Correct view for /offline/)
     path('offline/', views.offline_category_selection, name='offline_category'), 
@@ -15,6 +16,7 @@ urlpatterns = [
     
     # 4. Mode Multijoueur
     path('multiplayer/', views.multiplayer_lobby_view, name='multiplayer_lobby'),
+     path('classements/', views.classements_view, name='classements'),
     
     # ... any other paths (login, register, etc.)
 ]

@@ -112,5 +112,9 @@ def offline_game_view(request, category_id):
 
 @login_required 
 def multiplayer_lobby_view(request):
-    """Placeholder view for the multiplayer lobby."""
     return HttpResponse("Page du Lobby Multijoueur (en construction)")
+
+
+@login_required
+def classements_view(request):
+    return HttpResponse("Page du Lobby classements (en construction)")

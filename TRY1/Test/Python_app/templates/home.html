@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue sur QuizGame</title>
+
     <style>
+        *{
+            text-decoration: none;
+        }
         /* Styles généraux pour le corps de la page */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -20,12 +18,18 @@
 
         /* Styles pour les titres */
         h1 {
+            text-align: center;
             font-size: 2.8em; /* Plus grand pour le titre principal */
-            color: #2c3e50;
+            color: #08417aff;
             margin-bottom: 0.2em;
         }
 
+        h2{
+            color: #3f7ebdff;
+            margin-bottom: 1em;
+        }
         .subtitle {
+            text-align: center;
             font-size: 1.2em;
             color: #666;
             margin-bottom: 2em; /* Espace après le sous-titre */
@@ -40,8 +44,28 @@
         }
 
         /* Styles pour une carte individuelle */
-        .card {
-            background-color: #fff;
+        .card1 {
+            background-color: #E6E6FA;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
+            padding: 30px;
+            width: 280px; /* Largeur fixe pour les cartes */
+            text-align: center;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Effet au survol */
+            border: 1px solid #e0e0e0; /* Bordure subtile */
+        }
+        .card2 {
+            background-color: #f7d9e2ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
+            padding: 30px;
+            width: 280px; /* Largeur fixe pour les cartes */
+            text-align: center;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Effet au survol */
+            border: 1px solid #e0e0e0; /* Bordure subtile */
+        }
+        .card3 {
+            background-color: #EEE8AA;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
             padding: 30px;
@@ -74,103 +98,41 @@
             line-height: 1.5;
         }
 
-        /* Styles pour le bouton d'action (Jouer en mode OFFLINE/MULTIJOUEUR) */
-        .action-buttons {
-            margin-top: 3em; /* Espace au-dessus des boutons */
-            display: flex;
-            gap: 20px; /* Espace entre les boutons */
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .action-buttons button {
-            background-color: #2ecc71; /* Vert pour les boutons d'action */
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
-        }
-
-        .action-buttons button:hover {
-            background-color: #27ae60; /* Vert plus foncé au survol */
-        }
-
-        /* Styles pour les liens de connexion/inscription/déconnexion */
-        .auth-section {
-            margin-top: 2em;
-            text-align: center;
-        }
-
-        .auth-section a {
-            color: #3498db;
-            text-decoration: none;
-            font-size: 1em;
-            margin: 0 10px;
-            transition: color 0.2s ease;
-        }
-
-        .auth-section a:hover {
-            color: #2980b9;
-            text-decoration: underline;
-        }
-
-        .auth-buttons button {
-            background-color: #3498db; /* Bleu pour les boutons d'auth */
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1em;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            margin: 0 5px; /* Espace entre les boutons */
-        }
-
-        .auth-buttons button:hover {
-            background-color: #2980b9;
-        }
+      
     </style>
 </head>
 <body>
     <h1>Bienvenue sur QuizGame</h1>
     <p class="subtitle">Prêt à tester tes connaissances et défier tes amis?</p>
-
-    <div class="card-container">
-        <div class="card">
-            <span class="card-icon">💡</span>
+{% if user.is_authenticated %}
+            <h2>Bonjour, {{ user.username }} !</h2>
+    <div class="card-container"> 
+        <a href="{% url 'offline_category' %}">
+        <div class="card1">    
+         <span class="card-icon">💡</span>
             <h3 class="card-title">Questions variées</h3>
-            <p class="card-description">Des quiz en culture générale, histoire, sciences et plus encore.</p>
+            <p class="card-description">Des quiz en culture générale, histoire, sciences et plus encore.</p>       
         </div>
-
-        <div class="card">
+        </a>
+            
+        <a href="{% url 'multiplayer_lobby' %}">            
+        <div class="card2"> 
             <span class="card-icon">⚔️</span>
             <h3 class="card-title">Mode multijoueur</h3>
             <p class="card-description">Joue avec tes amis et comparez vos scores en direct.</p>
         </div>
-
-        <div class="card">
+        </a>
+           
+ <a href="{% url 'classements' %}">            
+        <div class="card3"> 
             <span class="card-icon">🏆</span>
             <h3 class="card-title">Classements</h3>
             <p class="card-description">Monte dans le classement et deviens le champion du quiz !</p>
+           
         </div>
-    </div>
-
-    <div class="auth-section">
-        {% if user.is_authenticated %}
-            <h2>Bonjour, {{ user.username }} !</h2>
-            <div class="action-buttons">
-                <a href="{% url 'offline_category' %}">
-                    <button>🎮 Jouer en mode OFFLINE</button>
-                </a>
-                <a href="{% url 'multiplayer_lobby' %}">
-                    <button>👥 Jouer en mode MULTIJOUEUR</button>
-                </a>
-            </div>
-            <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
+        </a>
+       
+         
         {% else %}
             <p>Veuillez vous connecter pour jouer.</p>
             <div class="auth-buttons">
@@ -180,8 +142,9 @@
                 <a href="{% url 'register' %}">
                     <button>📝 Inscription</button>
                 </a>
-            </div>
+                 </div>
         {% endif %}
     </div>
+    <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
 </body>
 </html>
