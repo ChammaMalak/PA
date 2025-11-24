@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Game Log In</title>
+
+    <style>
+      /* Styles CSS */
+
+      body {
+        font-family: sans-serif;
+
+        background-color: #f7f7f7; /* Gris très clair pour le fond */
+
+        margin: 0;
+
+        padding: 0;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        min-height: 100vh;
+      }
+
+      .login-container {
+        background-color: #ffffff;
+
+        padding: 60px 40px;
+
+        border-radius: 8px;
+
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Légère ombre pour soulever la boîte */
+
+        width: 100%;
+
+        max-width: 400px; /* Limite la largeur du formulaire */
+
+        text-align: center;
+      }
+
+      /* En-tête (Logo et sélecteur de langue) */
+
+      .header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 50px; /* Espace avant le titre Log In */
+      }
+
+      .logo {
+        font-size: 28px;
+
+        font-weight: bold;
+
+        color: #333;
+
+        display: flex;
+
+        align-items: center;
+      }
+
+      .logo-icon {
+        margin-right: 8px;
+
+        /* Utilisation d'un caractère Unicode pour le contrôleur de jeu */
+
+        font-size: 24px;
+      }
+
+      .language-selector {
+        font-size: 14px;
+
+        color: #555;
+
+        display: flex;
+
+        align-items: center;
+      }
+
+      .language-selector span {
+        margin-left: 5px;
+      }
+
+      /* Titre "Log In" */
+
+      h1 {
+        font-size: 32px;
+
+        font-weight: bold;
+
+        color: #333;
+
+        margin-bottom: 40px;
+      }
+
+      /* Champs de saisie (Inputs) */
+
+      .input-group {
+        margin-bottom: 25px;
+
+        position: relative; /* Pour positionner l'icône de l'œil */
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+
+        padding: 15px 20px;
+
+        border: 1px solid #ccc;
+
+        border-radius: 8px;
+
+        font-size: 16px;
+
+        box-sizing: border-box; /* S'assure que le padding n'augmente pas la largeur totale */
+
+        outline: none; /* Supprime le contour par défaut au focus */
+      }
+
+      /* Icône de l'œil (pour le mot de passe) */
+
+      .password-input-group .eye-icon {
+        position: absolute;
+
+        top: 50%;
+
+        right: 20px;
+
+        transform: translateY(-50%);
+
+        color: #aaa;
+
+        cursor: pointer;
+      }
+
+      /* Lien "Forgot password?" */
+
+      .forgot-password {
+        text-align: right;
+
+        margin-bottom: 30px;
+
+        font-size: 14px;
+      }
+
+      .forgot-password a {
+        color: #007bff; /* Bleu standard pour les liens (le reset de l'image est légèrement bleu) */
+
+        text-decoration: none;
+
+        font-weight: 600;
+      }
+
+      /* Bouton de connexion */
+
+      .login-button {
+        width: 100%;
+
+        padding: 15px 20px;
+
+        background-color: #fce8a6; /* Couleur jaune-crème du bouton */
+
+        border: none;
+
+        border-radius: 8px;
+
+        font-size: 18px;
+
+        font-weight: bold;
+
+        color: #333;
+
+        cursor: pointer;
+
+        transition: background-color 0.2s;
+      }
+
+      .login-button:hover {
+        background-color: #f7e096; /* Légèrement plus foncé au survol */
+      }
+
+      /* Texte du bas */
+
+      .footer-text {
+        margin-top: 50px;
+
+        font-size: 12px;
+
+        color: #aaa;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-container">
+         <a href="{% url 'home' %}">
+      <div class="header">
+        <div class="logo"><span class="logo-icon">&#x1F3AE;</span> Game</div>
+
+        <div class="language-selector">
+          <span class="logo-icon">&#x1F30E;</span> <span>EN</span>
+        </div>
+      </div>
+
+      <h1>Log In</h1>
+
+      <form action="#" method="POST">
+        {% csrf_token %}
+        <div class="input-group">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="username or email"
+            required
+          />
+        </div>
+
+        <div class="input-group password-input-group">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+
+          <span class="eye-icon">&#x1F441;</span>
+        </div>
+
+        <div class="forgot-password">
+          Forgot password? <a href="#">Reset</a>
+        </div>
+
+        <button type="submit" class="login-button">Log in</button>
+      </form>
+    </div>
+  </body>
+</html>

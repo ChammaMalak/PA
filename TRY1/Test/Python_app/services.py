@@ -44,8 +44,9 @@ def generate_and_save_question(category: str, difficulty: int, time_limit: int =
     
     # 2. Préparation du Prompt
     prompt = f"""
-    Génère une question de quiz de niveau {difficulty} sur le thème "{category}".
-    La réponse doit être STRICTEMENT au format JSON : 
+    Génère une question de quiz de niveau {difficulty} sur le thème "{category}". 
+La question doit être **concise et ne pas dépasser deux lignes**.
+La réponse doit être STRICTEMENT au format JSON : 
     {{ 
         "question": "Votre question ici", 
         "correct_answer": "La bonne réponse", 
@@ -111,12 +112,27 @@ def generate_and_save_question(category: str, difficulty: int, time_limit: int =
         print(f"Erreur de données : {e}")
         return None
     
+   # 4.5. Vérification des doublons de questions DANS LA MÊME CATÉGORIE
+    try:
+        existing_question = QuizQuestion.objects.filter(
+            text__iexact=data['question'], 
+            Category=category_obj
+        ).first()
+
+        if existing_question:
+            print(f"ALERTE: Question déjà existante (ID: {existing_question.pk}) dans la catégorie '{category}'. Ignorée.")
+            return None # Empêche la sauvegarde du doublon
+    except Exception as e:
+        print(f"Erreur lors de la vérification des doublons : {e}")
+        # On continue quand même si la vérification échoue, mais on alerte
+        pass
+    
     # 5. Sauvegarde en Base de Données
     try:
         # Création de la Question
         new_question = QuizQuestion.objects.create(
             text=data['question'],
-            Category=category_obj,   
+            Category=category_obj,  
             Difficulty=difficulty,
             TimeLimit=time_limit
         )
@@ -131,7 +147,7 @@ def generate_and_save_question(category: str, difficulty: int, time_limit: int =
         
         # Création des Fausses Réponses
         for incorrect_text in data['incorrect_answers']:
-           Answer.objects.create(
+            Answer.objects.create(
                 text=incorrect_text,
                 Question=new_question,
                 IsCorrect=False

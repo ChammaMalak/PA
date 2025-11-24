@@ -9,10 +9,10 @@
         text-align: center;
     }
 
-    /* Le Bloc Question et le Chronomètre */
+    /* Le Bloc Question et le Chronomètre (Gardé pour le style de la catégorie) */
     .header-info {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start; /* Aligné à gauche car le chrono est parti */
         align-items: center;
         margin-bottom: 20px;
         padding: 10px 20px;
@@ -24,17 +24,6 @@
         font-size: 1em;
         font-weight: 600;
         color: #00838f;
-    }
-
-    #timer {
-        font-size: 1.5em;
-        font-weight: bold;
-        color: #e53935;
-    }
-    
-    #timer span {
-        display: inline-block;
-        min-width: 30px;
     }
 
     /* La Carte de la Question */
@@ -76,26 +65,24 @@
     }
 
     /* Style au survol uniquement avant soumission */
-    {% if not submitted %}
-    .answer-button:hover {
+    .answer-button:not(:disabled):hover {
         background-color: #e0e0e0;
         transform: translateY(-2px);
     }
-    {% endif %}
     
-    /* Styles pour la coloration après soumission */
+    /* STYLES DE COULEUR: VERT/ROUGE après soumission */
     .answer-button.correct {
         background-color: #4CAF50; /* Vert */
         color: white;
         border-color: #388E3C;
-        pointer-events: none; /* Désactive le clic */
+        pointer-events: none;
     }
 
     .answer-button.incorrect {
         background-color: #F44336; /* Rouge */
         color: white;
         border-color: #D32F2F;
-        pointer-events: none; /* Désactive le clic */
+        pointer-events: none;
     }
 
     .answer-button:disabled {
@@ -117,57 +104,63 @@
         background-color: #ffebee;
         color: #F44336;
     }
+    
+    /* Classe pour masquer le contenu lorsque le résultat est affiché */
+    .hidden {
+        display: none !important; 
+    }
 </style>
 
 <div class="game-container">
     
     <div class="header-info">
         <div class="category-tag">Catégorie : {{ category.descriptor }}</div>
-        {% if not submitted %}
-            <div id="timer">Temps restant : <span id="time-display">{{ fixed_time }}</span>s</div>
-        {% else %}
-            <div id="timer" style="color: #4CAF50;">✅ Fini !</div>
-        {% endif %}
+        {# Le chrono a été supprimé ici #}
     </div>
     
-    <div class="question-card">
-        <p class="question-text">{{ question.text }}</p>
-    </div>
-
-    <form method="POST" action="{% url 'offline_game_view' category_id=category.pk %}">
-        {% csrf_token %}
+    
+    {# Masque la question et les réponses UNIQUEMENT si une réponse vient d'être soumise (submitted=True) #}
+    <div id="question-content" class="{% if submitted %}hidden{% endif %}">
         
-        <input type="hidden" name="question_id" value="{{ question.pk }}"> 
-
-        <div class="answers-container">
-            {% for answer in answers %}
-                {% with answer.pk as current_id %}
-                    
-                    {% comment %} Déterminer la classe de couleur après soumission {% endcomment %}
-                    {% with "" as button_class %}
-                        {% if submitted %}
-                            {% if current_id == correct_answer_id %}
-                                {% with "correct" as button_class %}{% endwith %}
-                            {% elif current_id == submitted_answer_id and not is_correct %}
-                                {% with "incorrect" as button_class %}{% endwith %}
-                            {% endif %}
-                        {% endif %}
-
-                        <button 
-                            type="submit" 
-                            name="answer_id" 
-                            value="{{ answer.pk }}" 
-                            class="answer-button {{ button_class }}"
-                            {% if submitted %}disabled{% endif %}
-                        >
-                            {{ answer.text }}
-                        </button>
-                    {% endwith %}
-                    
-                {% endwith %}
-            {% endfor %}
+        <div class="question-card">
+            <p class="question-text">{{ question.text }}</p>
         </div>
-    </form>
+
+        <form method="POST" action="{% url 'offline_game_view' category_id=category.pk %}">
+            {% csrf_token %}
+            
+            <input type="hidden" name="question_id" value="{{ question.pk }}"> 
+
+            <div class="answers-container">
+                {% for answer in answers %}
+                    {% with answer.pk as current_id %}
+                        
+                        {# Déterminer la classe de couleur après soumission #}
+                        {% with "" as button_class %}
+                            {% if submitted %}
+                                {% if current_id == correct_answer_id %}
+                                    {% with "correct" as button_class %}{% endwith %}
+                                {% elif current_id == submitted_answer_id and not is_correct %}
+                                    {% with "incorrect" as button_class %}{% endwith %}
+                                {% endif %}
+                            {% endif %}
+
+                            <button 
+                                type="submit" 
+                                name="answer_id" 
+                                value="{{ answer.pk }}" 
+                                class="answer-button {{ button_class }}"
+                                {% if submitted %}disabled{% endif %}
+                            >
+                                {{ answer.text }}
+                            </button>
+                        {% endwith %}
+                        
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        </form>
+    </div> 
     
     {% comment %} Affichage du résultat et du bouton Suivant {% endcomment %}
     {% if submitted %}
@@ -181,6 +174,7 @@
             </div>
         {% endif %}
         
+        {# Ce lien recharge la page et affiche la question suivante (submitted=False) #}
         <a href="{% url 'offline_game_view' category_id=category.pk %}" class="btn btn-primary" style="margin-top: 20px;">
             Question Suivante
         </a>
@@ -188,45 +182,6 @@
 
 </div>
     
-<script>
-    let timeRemaining = {{ fixed_time }};
-    const timeDisplay = document.getElementById('time-display');
-    const form = document.querySelector('form');
-    const isSubmitted = {{ submitted|lower }}; // Récupère l'état 'submitted' de Django
-
-    // Arrêter le chronomètre si la réponse a déjà été soumise
-    if (isSubmitted) {
-        // Optionnel : Désactiver le chronomètre visuellement
-        if (document.getElementById('timer')) {
-             document.getElementById('timer').style.color = '#4CAF50';
-        }
-    } else {
-        // Lancer le chronomètre uniquement si la réponse n'est pas soumise
-        const countdown = setInterval(() => {
-            timeRemaining -= 1;
-            timeDisplay.textContent = timeRemaining;
-
-            if (timeRemaining <= 0) {
-                clearInterval(countdown);
-                
-                // Le temps est écoulé, soumission automatique
-                // Pour une gestion propre du score, il faudrait soumettre une réponse 'None'
-                // ou laisser le serveur gérer le temps écoulé. 
-                
-                // Ici, nous désactivons juste les boutons pour empêcher de tricher.
-                document.querySelectorAll('.answer-button').forEach(button => {
-                    button.disabled = true;
-                });
-
-                alert("Temps écoulé ! La question sera considérée comme manquée.");
-                
-                // Optionnel : Rediriger après quelques secondes (si vous ne voulez pas de bouton "Suivant")
-                // setTimeout(() => {
-                //     window.location.href = "{% url 'offline_game_view' category_id=category.pk %}"; 
-                // }, 3000); 
-            }
-        }, 1000);
-    }
-</script>
+{# Le bloc <script> a été complètement supprimé car il gérait uniquement le chronomètre #}
 
 {% endblock content %}
