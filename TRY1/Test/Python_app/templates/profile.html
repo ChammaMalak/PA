@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil - Quiz Game</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .profile-container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 500px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .logo {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 28px;
+        color: #333;
+        margin: 20px 0;
+      }
+      .profile-info {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 16px;
+      }
+      .info-label {
+        font-weight: 600;
+        color: #666;
+      }
+      .info-value {
+        color: #333;
+      }
+      .btn-group {
+        display: flex;
+        gap: 10px;
+      }
+      .btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.2s;
+      }
+      .btn-home {
+        background-color: #fce8a6;
+        color: #333;
+      }
+      .btn-home:hover {
+        background-color: #f7e096;
+      }
+      .btn-logout {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .btn-logout:hover {
+        background-color: #c0392b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-container">
+      <div class="header">
+        <div class="logo">🎮 Quiz Game</div>
+        <h1>Profil</h1>
+      </div>
+
+      <div class="profile-info">
+        <div class="info-row">
+          <span class="info-label">Utilisateur :</span>
+          <span class="info-value">{{ user.username }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email :</span>
+          <span class="info-value">{{ user.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Membre depuis :</span>
+          <span class="info-value">{{ user.date_joined|date:"d/m/Y" }}</span>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <a href="/" class="btn btn-home">← Accueil</a>
+        <a href="/logout/" class="btn btn-logout">Déconnexion</a>
+      </div>
+    </div>
+  </body>
+</html>

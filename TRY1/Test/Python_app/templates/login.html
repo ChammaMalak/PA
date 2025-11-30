@@ -128,6 +128,10 @@
         outline: none; /* Supprime le contour par défaut au focus */
       }
 
+      input:focus {
+        border-color: #007bff;
+      }
+
       /* Icône de l'œil (pour le mot de passe) */
 
       .password-input-group .eye-icon {
@@ -162,6 +166,10 @@
         font-weight: 600;
       }
 
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+
       /* Bouton de connexion */
 
       .login-button {
@@ -193,36 +201,45 @@
       /* Texte du bas */
 
       .footer-text {
-        margin-top: 50px;
+        margin-top: 30px;
 
-        font-size: 12px;
+        font-size: 14px;
 
-        color: #aaa;
+        color: #666;
+      }
+
+      .footer-text a {
+        color: #007bff;
+
+        text-decoration: none;
+
+        font-weight: 600;
       }
     </style>
   </head>
 
   <body>
     <div class="login-container">
-         <a href="{% url 'home' %}">
-      <div class="header">
-        <div class="logo"><span class="logo-icon">&#x1F3AE;</span> Game</div>
+      <a href="/" style="text-decoration: none">
+        <div class="header">
+          <div class="logo"><span class="logo-icon">🎮</span> Game</div>
 
-        <div class="language-selector">
-          <span class="logo-icon">&#x1F30E;</span> <span>EN</span>
+          <div class="language-selector">
+            <span class="logo-icon">🌎</span> <span>FR</span>
+          </div>
         </div>
-      </div>
+      </a>
 
       <h1>Log In</h1>
 
-      <form action="#" method="POST">
+      <form method="POST">
         {% csrf_token %}
         <div class="input-group">
           <input
             type="text"
             id="username"
             name="username"
-            placeholder="username or email"
+            placeholder="Username or email"
             required
           />
         </div>
@@ -236,7 +253,7 @@
             required
           />
 
-          <span class="eye-icon">&#x1F441;</span>
+          <span class="eye-icon">👁️</span>
         </div>
 
         <div class="forgot-password">
@@ -244,6 +261,10 @@
         </div>
 
         <button type="submit" class="login-button">Log in</button>
+
+        <div class="footer-text">
+          No account? <a href="/register/">Sign up</a>
+        </div>
       </form>
     </div>
   </body>

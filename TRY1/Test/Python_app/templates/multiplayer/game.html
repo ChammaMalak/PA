@@ -1,0 +1,175 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="container game-container">
+    
+    <div class="turn-indicator" style="background-color: {{ current_player.color }};">
+        C'est le tour de : <strong>{{ current_player.name }}</strong>
+    </div>
+
+    <div class="scores mt-3 mb-4">
+        <h3>Scores</h3>
+        <ul>
+            {% for player in players %}
+            <li style="color: {{ player.color }};">
+                {{ player.name }}: <strong>{{ player.score }}</strong> points
+                {% if player.id == current_player.id %} (JOUE) {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    {# --- Début du bloc d'affichage de la question (copié de l'exemple que vous aimez) --- #}
+    <div class="card p-3 mb-4 category-display-card">
+        {# Utilisation de question.Category.descriptor pour s'assurer que le nom de la catégorie est affiché #}
+        <h5 class="category-text">Catégorie : {{ question.Category.descriptor }}</h5> 
+    </div>
+    
+    <div class="question-card card p-5 mb-5 shadow-sm">
+        <p class="h4 text-center question-text">{{ question.QuestionText }}</p>
+    </div>
+    
+    <form method="post" action="{% url 'multiplayer_game_start' %}">
+        {% csrf_token %}
+        <div class="row answers-grid">
+            {% for answer in answers %}
+            <div class="col-md-6 mb-3">
+                <button type="submit" 
+                        name="answer_id" 
+                        value="{{ answer.pk }}" 
+                        class="btn btn-light w-100 p-3 shadow-sm answer-button"
+                        style="border: 1px solid #ccc; white-space: normal;">
+                    {{ answer.AnswerText }}
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+    {# --- Fin du bloc d'affichage de la question --- #}
+    
+</div>
+
+<style>
+/* Styles généraux pour le conteneur du jeu */
+.game-container {
+    max-width: 900px; /* Largeur similaire à votre image */
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f0f2f5; /* Un fond léger pour le conteneur */
+    border-radius: 10px;
+}
+
+/* Style de l'indicateur de tour du joueur */
+.turn-indicator {
+    padding: 15px;
+    color: white; 
+    text-align: center;
+    border-radius: 8px;
+    font-size: 1.5em; /* Un peu plus grand */
+    font-weight: bold;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Ombre légère */
+}
+
+/* Styles des scores */
+.scores h3 {
+    color: #343a40;
+    margin-bottom: 15px;
+}
+.scores ul {
+    list-style: none;
+    padding: 0;
+}
+.scores li {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+/* Carte d'affichage de la catégorie */
+.category-display-card {
+    background-color: #e0f7fa; /* Fond bleu clair */
+    border-color: #b2ebf2; /* Bordure plus claire */
+    border-radius: 12px; /* Coins arrondis */
+    padding: 15px 20px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.category-text {
+    color: #00796b; /* Texte vert foncé */
+    font-size: 1.3em;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Carte de question */
+.question-card {
+    background-color: #ffffff; /* Fond blanc */
+    border-radius: 15px; /* Coins bien arrondis */
+    padding: 40px; /* Plus d'espacement */
+    margin-bottom: 35px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Ombre plus prononcée */
+}
+.question-text {
+    color: #495057; /* Texte gris foncé */
+    font-size: 1.6em; /* Plus grand */
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Grille des réponses */
+.answers-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Espacement entre les boutons */
+}
+.answer-button {
+    background-color: #f8f9fa; /* Fond gris clair */
+    border: 1px solid #dee2e6; /* Bordure légèrement plus foncée */
+    border-radius: 10px; /* Coins arrondis */
+    color: #343a40; /* Texte gris foncé */
+    font-size: 1.1em;
+    font-weight: 500;
+    padding: 15px 25px; /* Plus de padding */
+    transition: all 0.3s ease;
+    min-height: 70px; /* Hauteur minimale pour l'uniformité */
+    display: flex; /* Pour centrer le texte verticalement si besoin */
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Centrer le texte pour une meilleure lisibilité */
+}
+.answer-button:hover {
+    background-color: #e2e6ea; /* Fond un peu plus foncé au survol */
+    border-color: #dae0e5;
+    transform: translateY(-2px); /* Léger effet de soulèvement */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Ombre au survol */
+}
+.answer-button:active {
+    background-color: #d1d5db; /* Effet de clic */
+    border-color: #c8cbcf;
+    transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 15px;
+    }
+    .question-card {
+        padding: 25px;
+    }
+    .question-text {
+        font-size: 1.3em;
+    }
+    .answer-button {
+        font-size: 1em;
+        padding: 12px 20px;
+        min-height: 60px;
+    }
+    .answers-grid .col-md-6 {
+        flex: 0 0 100%; /* Les boutons prennent toute la largeur sur mobile */
+        max-width: 100%;
+    }
+}
+</style>
+{% endblock %}

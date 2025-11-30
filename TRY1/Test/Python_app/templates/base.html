@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}Quiz Game{% endblock %}</title>
+    <style>
+      /* design global simple et cohérent */
+      :root {
+        --accent1: #667eea;
+        --accent2: #764ba2;
+        --bg: linear-gradient(135deg, var(--accent1), var(--accent2));
+        --card: #fff;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Segoe UI, Roboto, Arial, sans-serif;
+        min-height: 100vh;
+        background: var(--bg);
+        color: #222;
+        display: flex;
+        flex-direction: column;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+        padding: 18px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.12);
+      }
+      header .brand {
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+      nav a {
+        color: #fff;
+        margin-left: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        opacity: 0.95;
+      }
+      .hero {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 24px;
+        margin-top: 18px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+      .container {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      }
+      .muted {
+        color: #666;
+        font-size: 0.95rem;
+      }
+      .form-row {
+        margin-bottom: 14px;
+      }
+      input[type="text"],
+      input[type="password"],
+      input[type="email"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e6e6e6;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+      button.btn {
+        background: linear-gradient(90deg, var(--accent1), var(--accent2));
+        color: #fff;
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+      }
+      @media (max-width: 640px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .row {
+          flex-direction: column;
+        }
+      }
+    </style>
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">🎮 Quiz Game</div>
+        <nav>
+          <a href="{% url 'home' %}">Accueil</a>
+          <a href="{% url 'offline_category' %}">Offline</a>
+          <a href="{% url 'classements' %}">Classements</a>
+          <a href="{% url 'register' %}">Inscription</a>
+          <a href="{% url 'login' %}">Connexion</a>
+        </nav>
+      </header>
+
+      <main class="hero">
+        {% if messages %} {% for message in messages %}
+        <div
+          style="
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #e6ffed;
+            border: 1px solid #b7f0c3;
+            color: #0b6b2f;
+          "
+        >
+          {{ message }}
+        </div>
+        {% endfor %} {% endif %} {% block content %}{% endblock %}
+      </main>
+
+      <footer
+        style="margin-top: 18px; text-align: center; color: #fff; opacity: 0.9"
+      >
+        <small>© Quiz Game — Projet local</small>
+      </footer>
+    </div>
+  </body>
+</html>

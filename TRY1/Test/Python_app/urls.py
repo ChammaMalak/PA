@@ -1,52 +1,68 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views # Importe toutes les vues (Web et API)
-from django.contrib.auth import views as auth_views # Pour les vues d'authentification intégrées de Django
+from . import views  # Importe toutes les vues (Web et API)
+from django.contrib.auth import views as auth_views  # Vues d'authentification intégrées de Django
 
-# =================================================================
-# 1. Configuration du Router DRF pour les ViewSets
-# =================================================================
+# Création du router DRF
 router = DefaultRouter()
 
-# Enregistrement des ViewSets pour l'API (e.g., /api/users/, /api/player-scores/)
-router.register(r'users', views.UserViewSet)
-router.register(r'player-scores', views.PlayerScoreViewSet)
-router.register(r'player-answers', views.PlayerAnswerViewSet)
-router.register(r'quiz-questions', views.QuizQuestionViewSet)
-router.register(r'game-sessions', views.GameSessionViewSet)
+# Enregistrement des ViewSets pour l'API (si présents)
+try:
+    router.register(r'users', views.UserViewSet)
+except Exception:
+    pass
 
-# =================================================================
-# 2. Définition des Patterns d'URL
-# =================================================================
+try:
+    router.register(r'player-scores', views.PlayerScoreViewSet)
+except Exception:
+    pass
+
+try:
+    router.register(r'player-answers', views.PlayerAnswerViewSet)
+except Exception:
+    pass
+
+try:
+    router.register(r'quiz-questions', views.QuizQuestionViewSet)
+except Exception:
+    pass
+
+try:
+    router.register(r'game-sessions', views.GameSessionViewSet)
+except Exception:
+    pass
+
+# Patterns d'URL
 urlpatterns = [
     # --- A. ROUTES D'API (DRF) ---
-    
-    # 1. Routes d'Authentification d'API (APIViews)
+    path('api/auth/register/', views.RegisterAPIView.as_view(), name='api-register'),
     path('api/auth/login/', views.LoginAPIView.as_view(), name='api-login'),
     path('api/auth/me/', views.MeAPIView.as_view(), name='api-me'),
     path('api/auth/logout/', views.LogoutAPIView.as_view(), name='api-logout'),
-    
-    # 2. Routes génériques du Router (ViewSets)
-    # Ceci inclut toutes les routes enregistrées ci-dessus (e.g., /api/users/)
+
+    # Routes du router (toutes les viewsets enregistrées ci-dessus)
     path('api/', include(router.urls)),
-    
-    
-    # --- B. ROUTES WEB TRADITIONNELLES (Rendu HTML) ---
-    
-    # 3. Route d'Accueil
-    # NOTE: On utilise home_view car elle est la vue d'accueil complète
+
+    # --- B. ROUTES WEB (rendu HTML) ---
     path('', views.home_view, name='home'),
+
+    # Authentification Django standard (templates)
+    path('login/', auth_views.LoginView.as_view(template_name='login.html', next_page='/'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+
+    # Profil utilisateur
+    path('profile/', views.profile_view, name='profile'),
+
+    # Mode offline / catégories / jeu
+    path('offline/', views.offline_category_selection, name='offline_category'),
+    path('offline/play/<int:category_id>/', views.offline_game_view, name='offline_game_view'),
+
+    # Multijoueur / classements / inscription
     
-    # 4. Authentification Classique (Django standard)
-    # Laissez ces chemins si vous utilisez toujours le système de templates de Django pour la connexion/déconnexion
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    # path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'), # Exemple
-    
-    # 5. Routes du Mode Offline
-    path('offline/', views.offline_category_selection, name='offline_category'), 
-    path('offline/play/<int:category_id>/', views.offline_game_view, name='offline_game_view'), 
-    
-    # 6. Routes Multijoueur/Classements
-    path('multiplayer/', views.multiplayer_lobby_view, name='multiplayer_lobby'),
+    path('multiplayer/', views.multiplayer_initial_setup, name='multiplayer_initial_setup'), 
+    path('multiplayer/lobby/', views.multiplayer_lobby_view, name='multiplayer_lobby'),
+    path('multiplayer/lobby/game/', views.multiplayer_game_start, name='multiplayer_game_start'),
+   
     path('classements/', views.classements_view, name='classements'),
+    path('register/', views.register_view, name='register'),
 ]

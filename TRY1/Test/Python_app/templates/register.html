@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Créer un compte - Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .login-container {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid #e1f5fe;
+      }
+
+      .logo {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #5e35b1;
+      }
+
+      .page-title {
+        text-align: center;
+        color: #78909c;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #546e7a;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #e1f5fe;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #fafafa;
+        transition: all 0.3s ease;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        outline: none;
+        border-color: #81d4fa;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(129, 212, 250, 0.2);
+      }
+
+      .btn-signup {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #81d4fa 0%, #b39ddb 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s ease;
+      }
+
+      .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(129, 212, 250, 0.4);
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 14px;
+        color: #78909c;
+      }
+
+      .login-link a {
+        color: #5e35b1;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+
+      .divider {
+        text-align: center;
+        margin: 25px 0;
+        color: #b0bec5;
+        font-size: 12px;
+        position: relative;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e0f2f1;
+      }
+
+      .divider span {
+        background: white;
+        padding: 0 15px;
+        position: relative;
+      }
+
+      .password-hint {
+        font-size: 12px;
+        color: #90a4ae;
+        margin-top: 5px;
+      }
+
+      .error-message {
+        color: #e53935;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="logo">Game</div>
+      <div class="page-title">Rejoignez notre communauté</div>
+
+      <form method="POST" novalidate>
+        {% csrf_token %} {% if errors.non_field_errors %}
+        <div class="error-message">
+          {% for error in errors.non_field_errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            placeholder="Votre nom d'utilisateur"
+            value="{{ username|default:'' }}"
+          />
+          {% if errors.username %}
+          <div class="error-message">{{ errors.username }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="email">Adresse email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="votre@email.com"
+            value="{{ email|default:'' }}"
+          />
+          {% if errors.email %}
+          <div class="error-message">{{ errors.email }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="••••••••"
+          />
+          <div class="password-hint">Minimum 8 caractères</div>
+          {% if errors.password %}
+          <div class="error-message">{{ errors.password }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirmer le mot de passe</label>
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm_password"
+            required
+            placeholder="••••••••"
+          />
+          {% if errors.confirm_password %}
+          <div class="error-message">{{ errors.confirm_password }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn-signup">Créer un compte</button>
+      </form>
+
+      <div class="divider">
+        <span>ou</span>
+      </div>
+
+      <div class="login-link">
+        Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a>
+      </div>
+    </div>
+
+    <script>
+      document.querySelector("form").addEventListener("submit", function (e) {
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirm-password").value;
+
+        if (password !== confirmPassword) {
+          e.preventDefault();
+          alert("Les mots de passe ne correspondent pas.");
+          return;
+        }
+
+        if (password.length < 8) {
+          e.preventDefault();
+          alert("Le mot de passe doit contenir au moins 8 caractères.");
+          return;
+        }
+      });
+
+      document
+        .getElementById("confirm-password")
+        .addEventListener("input", function () {
+          const password = document.getElementById("password").value;
+          const confirmPassword = this.value;
+
+          if (confirmPassword && password !== confirmPassword) {
+            this.style.borderColor = "#e53935";
+          } else {
+            this.style.borderColor = "#81d4fa";
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mode Offline - Quiz Game</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        background-color: #ffffff;
+        padding: 60px 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 50px;
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo-icon {
+        margin-right: 8px;
+        font-size: 24px;
+      }
+
+      h1 {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 40px;
+      }
+
+      .categories-list {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+      }
+
+      .categories-list li {
+        margin: 0;
+      }
+
+      .categories-list a {
+        display: block;
+        padding: 20px 15px;
+        background-color: #fce8a6;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+
+      .categories-list a:hover {
+        background-color: #f7e096;
+      }
+
+      .no-categories {
+        font-size: 14px;
+        color: #999;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      }
+
+      .back-btn {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 15px 20px;
+        background-color: #f0f0f0;
+        border: none;
+        border-radius: 8px;
+        color: #333;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .back-btn:hover {
+        background-color: #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="/" style="text-decoration: none">
+          <div class="logo"><span class="logo-icon">🎮</span> Quiz Game</div>
+        </a>
+      </div>
+
+      <h1>Mode Offline</h1>
+      <p class="description">Choisissez une catégorie pour jouer en local.</p>
+
+      {% if categories %}
+      <ul class="categories-list">
+        {% for cat in categories %}
+        <li>
+          <a href="/offline/play/{{ cat.id }}/">{{ cat.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="no-categories">
+        Aucune catégorie trouvée. Veuillez créer des catégories dans
+        l'administration ou importer des données.
+      </div>
+      {% endif %}
+
+      <a href="/" class="back-btn">← Retour à l'accueil</a>
+    </div>
+  </body>
+</html>

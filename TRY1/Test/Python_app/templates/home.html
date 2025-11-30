@@ -1,150 +1,123 @@
-
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accueil - Quiz Game</title>
     <style>
-        *{
-            text-decoration: none;
-        }
-        /* Styles généraux pour le corps de la page */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #f0f2f5; /* Un gris clair pour le fond */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* Prend toute la hauteur de la fenêtre */
-            color: #333;
-        }
-
-        /* Styles pour les titres */
-        h1 {
-            text-align: center;
-            font-size: 2.8em; /* Plus grand pour le titre principal */
-            color: #08417aff;
-            margin-bottom: 0.2em;
-        }
-
-        h2{
-            color: #3f7ebdff;
-            margin-bottom: 1em;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 2em; /* Espace après le sous-titre */
-        }
-
-        /* Conteneur principal pour les cartes */
-        .card-container {
-            display: flex;
-            gap: 20px; /* Espace entre les cartes */
-            flex-wrap: wrap; /* Pour que les cartes passent à la ligne sur petits écrans */
-            justify-content: center;
-        }
-
-        /* Styles pour une carte individuelle */
-        .card1 {
-            background-color: #E6E6FA;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
-            padding: 30px;
-            width: 280px; /* Largeur fixe pour les cartes */
-            text-align: center;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Effet au survol */
-            border: 1px solid #e0e0e0; /* Bordure subtile */
-        }
-        .card2 {
-            background-color: #f7d9e2ff;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
-            padding: 30px;
-            width: 280px; /* Largeur fixe pour les cartes */
-            text-align: center;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Effet au survol */
-            border: 1px solid #e0e0e0; /* Bordure subtile */
-        }
-        .card3 {
-            background-color: #EEE8AA;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
-            padding: 30px;
-            width: 280px; /* Largeur fixe pour les cartes */
-            text-align: center;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Effet au survol */
-            border: 1px solid #e0e0e0; /* Bordure subtile */
-        }
-
-        .card:hover {
-            transform: translateY(-5px); /* Légère élévation au survol */
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-icon {
-            font-size: 2.5em; /* Taille des icônes */
-            color: #3498db; /* Couleur bleue pour les icônes */
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            font-size: 1.4em;
-            color: #34495e;
-            margin-bottom: 10px;
-        }
-
-        .card-description {
-            font-size: 0.95em;
-            color: #7f8c8d;
-            line-height: 1.5;
-        }
-
-      
+      body {
+        font-family: sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+      .logo {
+        font-size: 48px;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 36px;
+        color: #333;
+        margin: 20px 0;
+      }
+      p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 30px;
+      }
+      .menu {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+      .menu-item {
+        display: block;
+        padding: 20px;
+        background-color: #fce8a6;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        font-size: 16px;
+        transition: background-color 0.2s;
+      }
+      .menu-item:hover {
+        background-color: #f7e096;
+      }
+      .auth-links {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .auth-links a {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+      .auth-links a:hover {
+        background-color: #0056b3;
+      }
+      .user-info {
+        background-color: #e6ffed;
+        border: 1px solid #b7f0c3;
+        color: #0b6b2f;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
     </style>
-</head>
-<body>
-    <h1>Bienvenue sur QuizGame</h1>
-    <p class="subtitle">Prêt à tester tes connaissances et défier tes amis?</p>
-{% if user.is_authenticated %}
-            <h2>Bonjour, {{ user.username }} !</h2>
-    <div class="card-container"> 
-        <a href="{% url 'offline_category' %}">
-        <div class="card1">    
-         <span class="card-icon">💡</span>
-            <h3 class="card-title">Questions variées</h3>
-            <p class="card-description">Des quiz en culture générale, histoire, sciences et plus encore.</p>       
-        </div>
-        </a>
-            
-        <a href="{% url 'multiplayer_lobby' %}">            
-        <div class="card2"> 
-            <span class="card-icon">⚔️</span>
-            <h3 class="card-title">Mode multijoueur</h3>
-            <p class="card-description">Joue avec tes amis et comparez vos scores en direct.</p>
-        </div>
-        </a>
-           
- <a href="{% url 'classements' %}">            
-        <div class="card3"> 
-            <span class="card-icon">🏆</span>
-            <h3 class="card-title">Classements</h3>
-            <p class="card-description">Monte dans le classement et deviens le champion du quiz !</p>
-           
-        </div>
-        </a>
-       
-         
-        {% else %}
-            <p>Veuillez vous connecter pour jouer.</p>
-            <div class="auth-buttons">
-                <a href="{% url 'login' %}">
-                    <button>➡️ Connexion</button>
-                </a>
-                <a href="{% url 'register' %}">
-                    <button>📝 Inscription</button>
-                </a>
-                 </div>
-        {% endif %}
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">🎮</div>
+      <h1>Quiz Game</h1>
+      <p>Bienvenue dans le meilleur jeu de quiz en ligne !</p>
+
+      {% if user.is_authenticated %}
+      <div class="user-info">
+        👋 Bienvenue, <strong>{{ user.username }}</strong>! <br /><small
+          ><a
+            href="/profile/"
+            style="color: inherit; text-decoration: underline"
+            >Voir mon profil</a
+          ></small
+        >
+      </div>
+      {% else %}
+      <div class="auth-links">
+        <a href="/login/">Se connecter</a>
+        <a href="/register/">S'inscrire</a>
+      </div>
+      {% endif %}
+
+      <div class="menu">
+        <a href="/offline/" class="menu-item">🎮 Mode Offline</a>
+        <a href="/classements/" class="menu-item">🏆 Classements</a>
+        <a href="/multiplayer/" class="menu-item">👥 Multijoueur</a>
+      </div>
+
+      {% if user.is_authenticated %}
+      <a
+        href="/logout/"
+        style="color: #e74c3c; text-decoration: none; font-weight: 600"
+        >Déconnexion</a
+      >
+      {% endif %}
     </div>
-    <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
-</body>
+  </body>
 </html>

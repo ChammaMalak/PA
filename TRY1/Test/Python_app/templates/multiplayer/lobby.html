@@ -1,0 +1,329 @@
+// {% extends "base.html" %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #f8f8f8;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+  }
+  .main-container {
+    max-width: 900px; /* Légèrement élargi pour inclure les noms des joueurs */
+    width: 90%;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+  }
+  h2.lobby-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  .lobby-description {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 30px;
+  }
+  .messages-container {
+    margin-bottom: 20px;
+  }
+  .message-alert {
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 15px;
+  }
+  /* Section noms des joueurs */
+  .player-names-section h3 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  .player-names-section .row {
+    justify-content: center;
+  }
+  .player-names-section .form-group {
+    margin-bottom: 15px;
+  }
+  .player-names-section label {
+    font-weight: bold;
+    color: #495057;
+  }
+  .player-names-section input {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  .player-names-section input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  /* Grille de catégories (inspirée de offline) */
+  .category-selection-section h3 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 110px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 10px;
+    border: none;
+    background-color: #f9f9f9; /* Défaut */
+  }
+  .category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+  .category-card.selected {
+    border: 3px solid #007bff;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+  }
+  .category-icon {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+  }
+  /* Couleurs spécifiques par catégorie (comme dans offline) */
+  .category-card.culture {
+    background-color: #fce4ec;
+    color: #c2185b;
+  }
+  .category-card.geographie {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  .category-card.histoire {
+    background-color: #fff3e0;
+    color: #ef6c00;
+  }
+  .category-card.science {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  .category-card.informatique {
+    background-color: #ede7f6;
+    color: #5e35b1;
+  }
+  .category-card.islam {
+    background-color: #f9cd6e;
+    color: #8d6e63;
+  }
+  .category-card.logique {
+    background-color: #e0f7fa;
+    color: #00838f;
+  }
+  .category-card.default {
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  /* Bouton Commencer */
+  .start-button {
+    background-color: #fff2c7;
+    color: #795548;
+    border: none;
+    padding: 15px 50px;
+    font-size: 1.2em;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .start-button:hover:not(:disabled) {
+    background-color: #ffe5a8;
+  }
+  .start-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .category-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .main-container {
+      padding: 20px;
+    }
+    h2.lobby-title {
+      font-size: 2rem;
+    }
+  }
+  @media (max-width: 480px) {
+    .category-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="main-container">
+  <h2 class="lobby-title">Lobby Multijoueur</h2>
+  <p class="lobby-description">Veuillez saisir les noms des {{ num_players }} joueurs pour commencer l'aventure !</p>
+
+  {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+        <div class="alert alert-danger message-alert" role="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post" id="lobbyForm" action="{% url 'multiplayer_lobby' %}">
+    {% csrf_token %}
+
+    <input type="hidden" id="selected_category_id" name="category_id" value="">
+
+    <div class="player-names-section mb-5">
+      <h3>Noms des Joueurs</h3>
+      <div class="row justify-content-center">
+        {% for i in player_range %}
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label for="player_name_{{ i }}">Joueur {{ i }}:</label>
+            <input type="text"
+                   class="form-control"
+                   id="player_name_{{ i }}"
+                   name="player_name_{{ i }}"
+                   placeholder="Nom du Joueur {{ i }}"
+                   required>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="category-selection-section mb-5">
+      <h3>Choisir une Catégorie</h3>
+      <div class="category-grid">
+        {% for category in categories %}
+          {% with desc=category.descriptor|lower %}
+            {% if 'géo' in desc %}
+              <button type="button" class="category-card geographie" data-category-id="{{ category.pk }}">
+                <span class="category-icon">🌍</span>
+                {{ category.descriptor }}
+              </button>
+            {% elif 'science' in desc %}
+              <button type="button" class="category-card science" data-category-id="{{ category.pk }}">
+                <span class="category-icon">🧪</span>
+                {{ category.descriptor }}
+              </button>
+            {% elif 'hist' in desc %}
+              <button type="button" class="category-card histoire" data-category-id="{{ category.pk }}">
+                <span class="category-icon">🏛️</span>
+                {{ category.descriptor }}
+              </button>
+            {% elif 'culture' in desc %}
+              <button type="button" class="category-card culture" data-category-id="{{ category.pk }}">
+                <span class="category-icon">🧠</span>
+                {{ category.descriptor }}
+              </button>
+            {% elif 'informatique' in desc %}
+              <button type="button" class="category-card informatique" data-category-id="{{ category.pk }}">
+                <span class="category-icon">💻</span>
+                {{ category.descriptor }}
+              </button>
+            {% elif 'islam' in desc %}
+              <button type="button" class="category-card islam" data-category-id="{{ category.pk }}">
+                <span class="category-icon">🕌</span>
+                {{ category.descriptor }}
+              </button>
+            {% elif 'logique' in desc or 'devinette' in desc %}
+              <button type="button" class="category-card logique" data-category-id="{{ category.pk }}">
+                <span class="category-icon">🧩</span>
+                {{ category.descriptor }}
+              </button>
+            {% else %}
+              <button type="button" class="category-card default" data-category-id="{{ category.pk }}">
+                <span class="category-icon">❓</span>
+                {{ category.descriptor }}
+              </button>
+            {% endif %}
+          {% endwith %}
+        {% empty %}
+          <p>Aucune catégorie n'est disponible pour le moment.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button type="submit" id="startGameButton" class="start-button" disabled>Commencer la Partie</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryCards = document.querySelectorAll('.category-card');
+    const selectedCategoryIdInput = document.getElementById('selected_category_id');
+    const startGameButton = document.getElementById('startGameButton');
+    const playerInputs = document.querySelectorAll('.player-names-section input[type="text"]');
+
+    let selectedCategoryId = null;
+
+    // Fonction pour vérifier si tous les champs de nom sont remplis
+    function checkPlayerNames() {
+      let allNamesFilled = true;
+      playerInputs.forEach(input => {
+        if (input.value.trim() === '') {
+          allNamesFilled = false;
+        }
+      });
+      return allNamesFilled;
+    }
+
+    // Fonction pour activer/désactiver le bouton "Commencer la Partie"
+    function updateStartButtonState() {
+      if (selectedCategoryId !== null && checkPlayerNames()) {
+        startGameButton.disabled = false;
+      } else {
+        startGameButton.disabled = true;
+      }
+    }
+
+    // Écouteurs pour les champs de nom des joueurs
+    playerInputs.forEach(input => {
+      input.addEventListener('input', updateStartButtonState);
+    });
+
+    categoryCards.forEach(card => {
+      card.addEventListener('click', function() {
+        // Désélectionner toutes les autres cartes
+        categoryCards.forEach(c => c.classList.remove('selected'));
+
+        // Sélectionner la carte actuelle
+        this.classList.add('selected');
+        selectedCategoryId = this.dataset.categoryId;
+        selectedCategoryIdInput.value = selectedCategoryId; // Met à jour le champ caché
+        
+        updateStartButtonState(); // Met à jour l'état du bouton après sélection
+      });
+    });
+
+    // Initialiser l'état du bouton au chargement
+    updateStartButtonState();
+  });
+</script>
+{% endblock %}
